@@ -18,7 +18,7 @@ RUN mvn clean package  && ls -l target  # List files in target after build
 
 # Use OpenJDK 17-slim for running the application
 FROM openjdk:17-slim
-COPY --from=build /app/target/order-1.0-SNAPSHOT.jar /app/order-.jar
+COPY --from=build /app/target/order-0.0.1-SNAPSHOT.jar /app/order.jar
 
 # Set the working directory
 WORKDIR /app
