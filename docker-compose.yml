@@ -15,7 +15,8 @@ services:
       - /home/ubuntu/jenkins_compose/jenkins_configuration:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock  # Umożliwia Jenkinsowi komunikację z Dockerem na host'cie
   order:
-    image: your-dockerhub-username/order:latest  # Docker image z pipeline
-    container_name: order_service
+    build:
+      context: .  # Set the context to the Shop directory
+      dockerfile: Dockerfile
     ports:
       - "8081:8081"  # Mapowanie p
