@@ -80,7 +80,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>com/sii/mentoring/shop/notification/OrderApplication</mainClass> <!-- Replace with your main class -->
+							<mainClass>com/sii/mentoring/shop/notification/NotificationApplication</mainClass> <!-- Replace with your main class -->
 						</manifest>
 					</archive>
 				</configuration>
