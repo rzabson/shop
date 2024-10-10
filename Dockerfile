@@ -6,16 +6,20 @@ RUN apt-get update
 FROM maven:3.9.4 AS build
 WORKDIR /app
 
-COPY order-service/pom.xml ./order-service/pom.xml
-COPY order-service/src ./order-service/src
+# Copy order-service files
+COPY order-service/pom.xml order-service/pom.xml
+COPY order-service/src order-service/src
+
+# Build order-service
 RUN mvn -f order-service/pom.xml clean package
 
-# Copy the src directory to the working directory
-COPY notification-service/pom.xml ./notification-service/pom.xml
-COPY notification-service/src ./notification-service/src
-# Build the application and output logs to check if the JAR is generated
+# Copy notification-service files
+COPY notification-service/pom.xml notification-service/pom.xml
+COPY notification-service/src notification-service/src
+
+# Build notification-service
 RUN mvn -f notification-service/pom.xml clean package
-# Ensure the generated JAR file will be in /app/target/
+
 
 # Use OpenJDK 17-slim for running the application
 FROM openjdk:17-slim
