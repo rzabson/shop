@@ -68,8 +68,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.10.1</version>
 				<configuration>
-					<source>23</source>
-					<target>23</target>
+					<source>17</source>
+					<target>17</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -80,7 +80,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>com/sii/mentoring/shop/notification/NotificationApplication</mainClass> <!-- Replace with your main class -->
+							<mainClass>com/sii/mentoring/shop/order/OrderApplication</mainClass> <!-- Replace with your main class -->
 						</manifest>
 					</archive>
 				</configuration>
