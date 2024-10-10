@@ -29,5 +29,5 @@ services:
       dockerfile: Dockerfile
     image: notification-service
     ports:
-      - "8081:8081"  # Adjust the port as needed
+      - "9006:9006"  # Adjust the port as needed
     entrypoint: ["java", "-jar", "/app/notification.jar"]
