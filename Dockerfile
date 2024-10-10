@@ -8,11 +8,14 @@ WORKDIR /app
 
 COPY order-service/pom.xml ./order-service/pom.xml
 COPY order-service/src ./order-service/src
+RUN mvn -f order-service/pom.xml clean package
+RUN mvn -f order-service/pom.xml clean package
+
 # Copy the src directory to the working directory
 COPY notification-service/pom.xml ./notification-service/pom.xml
 COPY notification-service/src ./notification-service/src
 # Build the application and output logs to check if the JAR is generated
-RUN mvn clean package  && ls -l target  # List files in target after build
+RUN mvn -f notification-service/pom.xml clean package
 # Ensure the generated JAR file will be in /app/target/
 
 # Use OpenJDK 17-slim for running the application
