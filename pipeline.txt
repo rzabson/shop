@@ -1,0 +1,99 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE_NAME = 'order-service'
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/rzabson/shop.git'
+            }
+        }
+        stage('Build JAR') {
+            steps {
+                script {
+                    // Build the JAR file using Maven
+                    sh 'mvn -f order-service/pom.xml clean package'
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image for order-service
+                    sh "docker build -t ${DOCKER_IMAGE_NAME} -f Dockerfile ."
+                }
+            }
+        }
+        stage('Deploy with Docker Compose') {
+            steps {
+                script {
+                    // Use Docker Compose to deploy the services
+                    sh "docker-compose up -d order-service"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed!'
+        }
+    }
+}
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE_NAME = 'notification-service'
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/rzabson/shop.git'
+            }
+        }
+        stage('Build JAR') {
+            steps {
+                script {
+                    // Build the JAR file using Maven
+                    sh 'mvn -f notification-service/pom.xml clean package'
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image for notification-service
+                    sh "docker build -t ${DOCKER_IMAGE_NAME} -f Dockerfile ."
+                }
+            }
+        }
+        stage('Deploy with Docker Compose') {
+            steps {
+                script {
+                    // Use Docker Compose to deploy the services
+                    sh "docker-compose up -d notification-service"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed!'
+        }
+    }
+}
+
