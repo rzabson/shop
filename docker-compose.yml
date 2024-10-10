@@ -14,9 +14,20 @@ services:
     volumes:
       - /home/ubuntu/jenkins_compose/jenkins_configuration:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock  # Umożliwia Jenkinsowi komunikację z Dockerem na host'cie
-  order:
+  order-service:
     build:
-      context: .  # Set the context to the Shop directory
+      context: .
       dockerfile: Dockerfile
+    image: order-service
     ports:
-      - "8081:8081"  # Mapowanie p
+        - "9005:9005"  # Adjust the port as needed
+    entrypoint: [ "java", "-jar", "/app/order.jar" ]
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: notification-service
+    ports:
+      - "8081:8081"  # Adjust the port as needed
+    entrypoint: ["java", "-jar", "/app/notification.jar"]

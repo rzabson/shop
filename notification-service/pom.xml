@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sii.mentoring.shop</groupId>
-	<artifactId>order</artifactId>
+	<artifactId>notification</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>order</name>
+	<name>notification</name>
 	<description>Notification service</description>
 	<url/>
 	<licenses>
