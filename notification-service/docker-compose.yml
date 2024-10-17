@@ -1,0 +1,8 @@
+services:
+  notification-service:
+    image: notification-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+        - "9006:9006"  # Adjust the port as needed

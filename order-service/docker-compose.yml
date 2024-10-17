@@ -1,0 +1,8 @@
+services:
+  order-service:
+    image: order-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9005:9005"  # Adjust the port as needed
