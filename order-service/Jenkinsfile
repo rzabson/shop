@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE_NAME = 'order-service'
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'jenkins-github-config', url: 'https://github.com/rzabson/shop.git'
+            }
+        }
+        stage('Build JAR') {
+            steps {
+                script {
+                    // Build the JAR file using Maven
+                    sh 'mvn -f order-service/pom.xml clean package'
+                    sh 'ls order-service/target/'
+
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image from the Dockerfile in the order-service directory
+                    sh 'docker build -t order-service ./order-service'
+                }
+            }
+        }
+        stage('Deploy with Docker Compose') {
+            steps {
+                script {
+                    // Use Docker Compose to deploy the services
+                    sh "cd order-service && docker-compose -f ${DOCKER_COMPOSE_FILE} up  -d order-service"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed!'
+        }
+    }
+}
+--
