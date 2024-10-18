@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'jenkins-github-config', url: 'https://github.com/rzabson/shop.git'
+                git branch: 'kubernetes-config', url: 'https://github.com/rzabson/shop.git'
             }
         }
         stage('Build JAR') {
