@@ -12,3 +12,4 @@ services:
     volumes:
       - /home/ubuntu/jenkins_compose/jenkins_configuration:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock  # Jenkins communication through host to docker
+      - ~/.kube:/root/.kube
