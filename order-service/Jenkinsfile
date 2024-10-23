@@ -4,12 +4,14 @@ pipeline {
     environment {
         DOCKER_IMAGE_NAME = 'order-service'
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+        KUBERNETES_DEPLOY_PATH = 'order-service/kubernetes'  // Kubernetes config path
+
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'jenkins-github-config', url: 'https://github.com/rzabson/shop.git'
+                git branch: 'kubernetes-config', url: 'https://github.com/rzabson/shop.git'
             }
         }
         stage('Build JAR') {
@@ -38,6 +40,25 @@ pipeline {
                 }
             }
         }
+         stage('Push to image registry') {
+                    steps {
+                        script {
+                           sh "docker tag order-service:latest localhost:5000/order-service:latest"
+                           sh "docker push localhost:5000/order-service:latest"
+
+                        }
+                    }
+                }
+        stage('Deploy') {
+                    steps {
+                    withEnv(["KUBECONFIG=/root/.kube/config"]) {
+                                         // Deploy the Kubernetes manifests for the order-service
+                                         sh "kubectl get pods -n default --no-headers | grep order | awk '{print \$1}' | xargs kubectl delete pod -n default"
+                                         sh "kubectl apply -f ${KUBERNETES_DEPLOY_PATH}/deployment.yaml --validate=false"
+                                         sh "kubectl apply -f ${KUBERNETES_DEPLOY_PATH}/service.yaml --validate=false"
+                        }
+                   }
+        }
     }
 
     post {
@@ -49,4 +70,3 @@ pipeline {
         }
     }
 }
---

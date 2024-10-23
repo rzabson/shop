@@ -4,12 +4,14 @@ pipeline {
     environment {
         DOCKER_IMAGE_NAME = 'notification-service'
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+        KUBERNETES_DEPLOY_PATH = 'notification-service/kubernetes'  // Kubernetes config path
+
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'jenkins-github-config', url: 'https://github.com/rzabson/shop.git'
+                git branch: 'kubernetes-config', url: 'https://github.com/rzabson/shop.git'
             }
         }
         stage('Build JAR') {
@@ -37,6 +39,25 @@ pipeline {
                     sh "cd notification-service && docker-compose -f ${DOCKER_COMPOSE_FILE} up  -d notification-service"
                 }
             }
+        }
+         stage('Push to image registry') {
+                    steps {
+                        script {
+                           sh "docker tag notification-service:latest localhost:5000/notification-service:latest"
+                           sh "docker push localhost:5000/notification-service:latest"
+
+                        }
+                    }
+                }
+        stage('Deploy') {
+                    steps {
+                    withEnv(["KUBECONFIG=/root/.kube/config"]) {
+                                         // Deploy the Kubernetes manifests for the notification-service
+                                         sh "kubectl get pods -n default --no-headers | grep notification | awk '{print \$1}' | xargs kubectl delete pod -n default"
+                                         sh "kubectl apply -f ${KUBERNETES_DEPLOY_PATH}/deployment.yaml --validate=false"
+                                         sh "kubectl apply -f ${KUBERNETES_DEPLOY_PATH}/service.yaml --validate=false"
+                        }
+                   }
         }
     }
 
