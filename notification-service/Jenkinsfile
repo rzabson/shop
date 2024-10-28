@@ -5,6 +5,7 @@ pipeline {
         DOCKER_IMAGE_NAME = 'notification-service'
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
         KUBERNETES_DEPLOY_PATH = 'notification-service/kubernetes'  // Kubernetes config path
+        SONARQUBE_SERVER = 'Sonarqube'
 
     }
 
@@ -21,6 +22,18 @@ pipeline {
                     sh 'mvn -f notification-service/pom.xml clean package'
                     sh 'ls notification-service/target/'
 
+                }
+            }
+        }
+        stage('Run SonarQube Analysis') {
+            steps {
+                script {
+
+                   dir('notification-service') {
+                        withSonarQubeEnv(SONARQUBE_SERVER) {
+                        sh 'mvn sonar:sonar -Dsonar.projectKey=your_project_key -Dsonar.host.url=http://10.253.100.226:9007 -Dsonar.login=admin -Dsonar.password=admin1'
+                        }
+                    }
                 }
             }
         }
