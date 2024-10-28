@@ -9,6 +9,17 @@ services:
     ports:
       - "8080:8080"
       - "50000:50000"
+    networks:
+      - jenkins-sonarqube
     volumes:
       - /home/ubuntu/jenkins_compose/jenkins_configuration:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock  # Jenkins communication through host to docker
+      - ~/.kube:/root/.kube
+  sonarqube:
+    image: sonarqube:lts
+    ports:
+      - "9007:9000"
+    networks:
+      - jenkins-sonarqube
+networks:
+  jenkins-sonarqube:
